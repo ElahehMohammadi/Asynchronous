@@ -115,7 +115,7 @@ getCountryANDneighbour("south korea");*/
 //       renderCountry(data[0]);
 //     });
 // };
-/*
+
 const getCountryData = function (country) {
   //country 1
   fetch(`https://restcountries.com/v3.1/name/${country}`)
@@ -134,7 +134,8 @@ const getCountryData = function (country) {
     })
     .then((response) => {
       if (!response) throw new Error("no neighbour found!");
-      response.json();
+      return response.json();
+      console.log(response);
     })
     .then(([data]) => renderCountry(data, "neighbour"))
     .catch((error) => {
@@ -147,10 +148,10 @@ const getCountryData = function (country) {
       // for loading circels
     });
 };
-getCountryData("japan");
-*/
+// getCountryData("japan");
+
 ///////////////////////////////////////
-// Coding Challenge #1
+//////////// SECTION Coding Challenge #1
 
 /* 
 In this challenge you will build a function 'whereAmI' which renders a country ONLY based on GPS coordinates. For that, you will use a second API to geocode coordinates.
@@ -175,3 +176,154 @@ TEST COORDINATES 2: -33.933, 18.474
 
 GOOD LUCK 😀
 */
+
+//PART 1
+
+const whereAmI = function (lat, lng) {
+  const req = fetch(
+    `https://api.opencagedata.com/geocode/v1/json?q=${lat},${lng}&key=598f881e42784a6d8393b5644b724992`
+  )
+    .then((response) => {
+      if (!response.ok)
+        throw new Error(`something went wrong in response ${response.status}`);
+      return response.json();
+    })
+    .then((data) => {
+      data = data.results[0].components;
+      console.log(`You are in ${data.city}, ${data.country}`);
+      getCountryData(data.country);
+    });
+};
+// whereAmI(52.508, 13.381);
+// whereAmI(19.037, 72.873);
+// whereAmI(-33.933, 18.474);
+
+/*
+console.log("test start");
+setTimeout(() => console.log("0 sec timer", 0));
+Promise.resolve("resolved promise 1").then((res) => console.log(res));
+Promise.resolve("resolved promise 2").then((res) => {
+  for (let i = 0; i < 100; i++) console.log(res);
+});
+console.log("test end");
+*/
+
+//////////// SECTION lottary promise
+/*
+// the function is called excuter
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log("lottering...");
+  setTimeout(function () {
+    if (Math.random() >= 0.5) resolve("You Win $");
+    else reject(new Error("You lost your money"));
+  }, 2000);
+});
+lotteryPromise
+  .then((res) => console.log(res))
+  .catch((err) => console.error(err));
+
+const wait = function (sec) {
+  return new Promise((resolve) => setTimeout(resolve, sec * 1000));
+};
+wait(2)
+  .then((res) => {
+    console.log("i wated for 2 seconds");
+    return wait(1);
+  })
+  .then((res) => console.log("i waited for 1 seconds"));
+
+// a fullfiled promise
+Promise.resolve("yeyyy").then((res) => console.log(res));
+// or a rejected one
+Promise.reject("NOOO god whyyyy whyyyyyyy").then((res) => console.log(res));
+*/
+/*
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    // navigator.geolocation.getCurrentPosition(
+    // (position) => resolve(position.coords),
+    // (err) => reject(`sothings wrong! checkout ${err.message}!`)
+    // );
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+btn.addEventListener("click", () => {
+  getPosition().then((position) => {
+    // console.log(position);
+    btn.style.opacity = 0;
+    whereAmI(position.coords.latitude, position.coords.longitude);
+  });
+});
+*/
+
+///////////////////////////////////////
+
+//////////// SECTION Coding Challenge #2
+
+/* 
+Build the image loading functionality that I just showed you on the screen.
+
+Tasks are not super-descriptive this time, so that you can figure out some stuff on your own. Pretend you're working on your own 😉
+
+PART 1
+C:\Users\ev221\Pictures\e-readerWall
+1. Create a function 'createImage' which receives imgPath as an input. This function returns a promise which creates a new image (use document.createElement('img')) and sets the .src attribute to the provided image path. When the image is done loading, append it to the DOM element with the 'images' class, and resolve the promise. The fulfilled value should be the image element itself. In case there is an error loading the image ('error' event), reject the promise.
+
+If this part is too tricky for you, just watch the first part of the solution.
+
+PART 2
+2. Comsume the promise using .then and also add an error handler;
+3. After the image has loaded, pause execution for 2 seconds using the wait function we created earlier;
+4. After the 2 seconds have passed, hide the current image (set display to 'none'), and load a second image (HINT: Use the image element returned by the createImage promise to hide the current image. You will need a global variable for that 😉);
+5. After the second image has loaded, pause execution for 2 seconds again;
+6. After the 2 seconds have passed, hide the current image.
+
+TEST DATA: Images in the img folder. Test the error handler by passing a wrong image path. Set the network speed to 'Fast 3G' in the dev tools Network tab, otherwise images load too fast.
+
+GOOD LUCK 😀
+*/
+const imgClass = document.querySelector(".images");
+const createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const img = document.createElement("img");
+    img.src = imgPath;
+    console.log(img);
+    img.addEventListener("load", function () {
+      imgClass.append(img);
+      resolve(img);
+    });
+    img.addEventListener("error", function () {
+      reject(new error("image not found"));
+    });
+  });
+};
+const wait = function () {
+  return new Promise((resolve) => setTimeout(resolve, 2000));
+};
+// const images = function (imgPath) { };
+let currimg;
+createImage(`img/img-1.jpg`)
+  .then((img) => {
+    currimg = img;
+  })
+  .then(() => wait())
+  .then(() => {
+    currimg.style.display = "none";
+    return createImage(`img/img-2.jpg`);
+  })
+  .then((img) => {
+    currimg = img;
+  })
+  .then(() => wait())
+  .then(() => {
+    currimg.style.display = "none";
+    return createImage(`img/img-3.jpg`);
+  })
+  .then((img) => {
+    currimg = img;
+  })
+  .then(() => wait())
+  .then(() => {
+    currimg.style.display = "none";
+  });
