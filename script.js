@@ -24,6 +24,7 @@ const renderCountry = function (data, className = "") {
   countriesContainer.insertAdjacentHTML("beforeend", html);
   countriesContainer.style.opacity = 1;
 };
+
 const renderError = function (msg) {
   countriesContainer.insertAdjacentText("beforeend", msg);
   countriesContainer.style.opacity = 1;
@@ -487,6 +488,7 @@ TEST DATA: ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']. To test, turn of
 
 GOOD LUCK 😀
 */
+/*
 const wait = function (seconds) {
   return new Promise(function (resolve) {
     setTimeout(resolve, seconds * 1000);
@@ -510,37 +512,7 @@ const createImage = function (imgPath) {
     });
   });
 };
-/*
-let currentImg;
 
-createImage("img/img-1.jpg")
-  .then((img) => {
-    currentImg = img;
-    console.log("Image 1 loaded");
-    return wait(2);
-  })
-  .then(() => {
-    currentImg.style.display = "none";
-    return createImage("img/img-2.jpg");
-  })
-  .then((img) => {
-    currentImg = img;
-    console.log("Image 2 loaded");
-    return wait(2);
-  }).then(() => {
-    currentImg.style.display = "none";
-    return createImage("img/img-3.jpg");
-  })
-  .then((img) => {
-    currentImg = img;
-    console.log("Image 3 loaded");
-    return wait(2);
-  })
-  .then(() => {
-    currentImg.style.display = "none";
-  })
-  .catch((err) => console.error(err));
-*/
 const loadNPause = async function (imgArr) {
   try {
     let img;
@@ -568,3 +540,4 @@ const loadAll = async function (imgArr) {
   await loadNPause(data);
   await loadAll(data);
 })();
+*/
